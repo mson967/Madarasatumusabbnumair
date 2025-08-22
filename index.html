@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musab Bin Umair Memorial School</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --color-primary: #1a5e3c;
+            --color-secondary: #d4af37;
+            --color-accent: #2c7d52;
+            --color-light: #f4f9f4;
+            --color-dark: #333;
+            --color-white: #fff;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: var(--color-dark);
+            background-color: var(--color-light);
+            padding-top: 80px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+        }
+
+        section {
+            padding: 5rem 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--color-primary);
+            color: var(--color-white);
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: var(--color-secondary);
+            color: var(--color-dark);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        /* Header & Navigation */
+        header {
+            background: var(--color-white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0;
+            text-align: left;
+            color: var(--color-primary);
+        }
+
+        .logo span {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--color-secondary);
+            font-style: italic;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-dark);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--color-primary);
+        }
+
+        .nav-links a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--color-primary);
+            left: 0;
+            bottom: -5px;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover:after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--color-primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1700&q=80') no-repeat center center/cover;
+            height: 80vh;
+            color: var(--color-white);
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            color: var(--color-white);
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        /* Sections */
+        .sections-intro {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .section-card {
+            background: var(--color-white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+            padding: 2rem;
+            border-top: 5px solid var(--color-primary);
+        }
+
+        .section-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .section-icon {
+            font-size: 3rem;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .section-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .section-card p {
+            margin-bottom: 1.5rem;
+            color: #666;
+        }
+
+        /* Registration Section */
+        .registration {
+            background: linear-gradient(to right, var(--color-primary), var(--color-accent));
+            color: var(--color-white);
+        }
+
+        .registration h2 {
+            color: var(--color-white);
+        }
+
+        .registration-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .reg-option {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 2rem;
+            width: 300px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .reg-option:hover {
+            transform: scale(1.05);
+        }
+
+        .reg-option h3 {
+            color: var(--color-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .reg-option ul {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+
+        .reg-option ul li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .reg-option ul li:before {
+            content: "•";
+            color: var(--color-secondary);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--color-secondary);
+            display: block;
+            margin: 1rem 0;
+        }
+
+        /* Contact Section */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 300px;
+            border-radius: 10px;
+            border: none;
+        }
+
+        .contact-info div {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .contact-info i {
+            color: var(--color-primary);
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            margin-top: 5px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--color-dark);
+            color: var(--color-white);
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .footer-logo, .footer-links, .footer-social {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links h4, .footer-social h4 {
+            color: var(--color-secondary);
+            text-align: left;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--color-white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--color-secondary);
+        }
+
+        .social-icons a {
+            color: var(--color-white);
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            color: var(--color-secondary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: var(--color-white);
+            margin: 10% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            animation: modalopen 0.5s;
+        }
+
+        @keyframes modalopen {
+            from {opacity: 0; transform: translateY(-60px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: var(--color-dark);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                background: var(--color-white);
+                flex-direction: column;
+                width: 80%;
+                max-width: 300px;
+                height: 100vh;
+                top: 0;
+                right: -100%;
+                padding: 5rem 2rem;
+                box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+                transition: right 0.3s ease;
+                z-index: 1001;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links li {
+                margin: 1.5rem 0;
+            }
+
+            .close-menu {
+                display: block;
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1.1rem;
+            }
+            
+            .registration-container {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <h1>Musab Bin Umair <span>Memorial</span></h1>
+                </div>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#home" class="active">Home</a></li>
+                    <li><a href="#sections">Sections</a></li>
+                    <li><a href="#registration">Registration</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li class="close-menu" id="closeMenu"><i class="fas fa-times"></i></li>
+                </ul>
+                <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Nurturing Faith & Knowledge</h1>
+                <p>Inspiring the next generation of Muslims through comprehensive Islamic education, Quranic memorization, and spiritual development in a nurturing environment.</p>
+                <a href="#registration" class="btn">Register Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sections -->
+    <section id="sections">
+        <div class="container">
+            <div class="sections-intro">
+                <h2>Our Educational Sections</h2>
+                <p>We offer a comprehensive range of educational programs to cater to all ages and levels of Islamic learning.</p>
+            </div>
+
+            <div class="sections-grid">
+                <div class="section-card">
+                    <div class="section-icon">
+                        <i class="fas fa-mosque"></i>
+                    </div>
+                    <h3>Mosque & Majlis</h3>
+                    <p>Our community hub for daily prayers, Jumu'ah, Islamic lectures, and spiritual gatherings. Open to all members of the community.</p>
+                    <a href="#" class="btn btn-outline" onclick="openModal('mosque')">Learn More</a>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-icon">
+                        <i class="fas fa-book-quran"></i>
+                    </div>
+                    <h3>Tahfiz Section</h3>
+                    <p>Dedicated program for the memorization (Hifz) of the Holy Quran. We focus on Tajweed and retention for lifelong connection with the Quran.</p>
+                    <a href="#" class="btn btn-outline" onclick="openModal('tahfiz')">Learn More</a>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Islamiyya</h3>
+                    <p>Foundational Islamic studies covering Aqeedah (creed), Fiqh (jurisprudence), Seerah (prophetic biography), and Islamic manners.</p>
+                    <a href="#" class="btn btn-outline" onclick="openModal('islamiyya')">Learn More</a>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>Higher Islamic</h3>
+                    <p>Advanced studies for older students and adults. Delve deeper into Islamic sciences, theology, and contemporary issues.</p>
+                    <a href="#" class="btn btn-outline" onclick="openModal('higher')">Learn More</a>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-icon">
+                        <i class="fas fa-pencil-alt"></i>
+                    </div>
+                    <h3>Primary School</h3>
+                    <p>Blending the national curriculum with core Islamic values. We provide a strong academic foundation in a faith-based environment.</p>
+                    <a href="#" class="btn btn-outline" onclick="openModal('primary')">Learn More</a>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-icon">
+                        <i class="fas fa-child"></i>
+                    </div>
+                    <h3>Nursery</h3>
+                    <p>A safe, loving, and stimulating environment for our youngest learners. Introduction to basic Islamic principles through play.</p>
+                    <a href="#" class="btn btn-outline" onclick="openModal('nursery')">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration/Payment -->
+    <section id="registration" class="registration">
+        <div class="container">
+            <h2>Registration & Fees</h2>
+            <p class="sections-intro" style="color: var(--color-light);">Secure your spot for the upcoming academic term. Fees can be paid per term or annually.</p>
+
+            <div class="registration-container">
+                <div class="reg-option">
+                    <h3>Termly Payment</h3>
+                    <ul>
+                        <li>Pay for one term at a time</li>
+                        <li>Flexible commitment</li>
+                        <li>Due at the beginning of each term</li>
+                    </ul>
+                    <span class="price">₦15,000</span>
+                    <a href="#" class="btn" onclick="openRegModal('Termly')">Register & Pay</a>
+                </div>
+
+                <div class="reg-option">
+                    <h3>Annual Payment</h3>
+                    <ul>
+                        <li>Pay for the entire year</li>
+                        <li>Significant discount</li>
+                        <li>Guaranteed spot for all terms</li>
+                    </ul>
+                    <span class="price">₦40,000</span>
+                    <a href="#" class="btn" onclick="openRegModal('Annual')">Register & Pay</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Location -->
+    <section id="contact">
+        <div class="container">
+            <h2>Contact Us & Location</h2>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3>Get In Touch</h3>
+                    <div>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>123 Islamic Avenue, Knowledge City, KC 10001</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-phone"></i>
+                        <p>+234 801 234 5678<br>+234 802 345 6789</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-envelope"></i>
+                        <p>admin@musabmemorial.edu.ng<br>info@musabmemorial.edu.ng</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-clock"></i>
+                        <p>Office Hours: 8:00 AM - 5:00 PM, Monday - Friday</p>
+                    </div>
+                </div>
+                <div class="map-container">
+                    <h3>Find Us</h3>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126845.016383995!2d3.3310372999999997!3d6.548776500000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8ed7e1c85d6b%3A0xd8c536eab4c4a7ee!2sLagos%2C%20Nigeria!5e0!3m2!1sen!2s!4v1698346787897!5m2!1sen!2s" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Musab Bin Umair Memorial</h3>
+                    <p>Nurturing faith, knowledge, and character for a brighter Islamic future.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#sections">Sections</a></li>
+                        <li><a href="#registration">Registration</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h4>Follow Us</h4>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 Musab Bin Umair Memorial. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Registration Modal -->
+    <div id="regModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('regModal')">&times;</span>
+            <h2 id="modalTitle">Registration Form</h2>
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="parentName">Parent/Guardian Full Name*</label>
+                    <input type="text" id="parentName" name="parentName" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number*</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="studentName">Student's Full Name*</label>
+                    <input type="text" id="studentName" name="studentName" required>
+                </div>
+                <div class="form-group">
+                    <label for="studentAge">Student's Age*</label>
+                    <input type="number" id="studentAge" name="studentAge" required>
+                </div>
+                <div class="form-group">
+                    <label for="section">Desired Section*</label>
+                    <select id="section" name="section" required>
+                        <option value="">-- Select Section --</option>
+                        <option value="Nursery">Nursery</option>
+                        <option value="Primary">Primary School</option>
+                        <option value="Islamiyya">Islamiyya</option>
+                        <option value="Tahfiz">Tahfiz</option>
+                        <option value="Higher Islamic">Higher Islamic</option>
+                        <option value="Mosque/Majlis">Mosque & Majlis Programs</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="paymentPlan">Payment Plan*</label>
+                    <input type="text" id="paymentPlan" name="paymentPlan" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="comments">Additional Notes</label>
+                    <textarea id="comments" name="comments" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn">Proceed to Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Toggle Mobile Menu
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        const closeMenu = document.getElementById('closeMenu');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.add('active');
+        });
+
+        closeMenu.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+        });
+
+        // Close menu when a link is clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Modal Functions
+        function openModal(section) {
+            // This would be expanded to show details for each specific section
+            alert("More information about the " + section + " section would appear here.");
+        }
+
+        function openRegModal(plan) {
+            const modal = document.getElementById('regModal');
+            document.getElementById('paymentPlan').value = plan + " Plan";
+            modal.style.display = "block";
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // Close modal if user clicks outside of it
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            for (let i = 0; i < modals.length; i++) {
+                if (event.target == modals[i]) {
+                    modals[i].style.display = "none";
+                }
+            }
+        }
+
+        // Form Submission
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            alert('Thank you for your registration! In a real application, you would now be redirected to a secure payment gateway.');
+            closeModal('regModal');
+            this.reset();
+        });
+
+        // Simple scroll effect for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add active class to navigation links on scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
