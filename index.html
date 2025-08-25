@@ -795,10 +795,184 @@
         // Form Submission
         document.getElementById('registrationForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            alert('Thank you for your registration! In a real application, you would now be redirected to a secure payment gateway.');
-            closeModal('regModal');
-            this.reset();
+            
+            // Get form data
+            const formData = new FormData(this);
+            const registrationData = {
+                parentName: formData.get('parentName'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                studentName: formData.get('studentName'),
+                studentAge: parseInt(formData.get('studentAge')),
+                section: formData.get('section'),
+                paymentPlan: formData.get('paymentPlan'),
+                comments: formData.get('comments')
+            };
+
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Processing...';
+            submitBtn.disabled = true;
+
+            // Submit to backend
+            fetch('/api/registration', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(registrationData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`Registration successful! Your registration ID is: ${data.data.registrationId}. We will contact you soon with payment instructions.`);
+                    closeModal('regModal');
+                    this.reset();
+                } else {
+                    alert('Registration failed: ' + (data.message || 'Please try again.'));
+                }
+            })
+            .catch(error => {
+                console.error('Registration error:', error);
+                alert('Registration failed. Please check your internet connection and try again.');
+            })
+            .finally(() => {
+                // Reset button state
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
         });
+                    <h2>Contact Us</h2>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="contactName">Full Name*</label>
+                            <input type="text" id="contactName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactEmail">Email Address*</label>
+                            <input type="email" id="contactEmail" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactPhone">Phone Number</label>
+                            <input type="tel" id="contactPhone" name="phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="contactSubject">Subject*</label>
+                            <input type="text" id="contactSubject" name="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactMessage">Message*</label>
+                            <textarea id="contactMessage" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn">Send Message</button>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(contactModal);
+
+            // Handle contact form submission
+            document.getElementById('contactForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const formData = new FormData(this);
+                const contactData = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    subject: formData.get('subject'),
+                    message: formData.get('message')
+                };
+
+                showLoading(true);
+
+                ContactAPI.sendMessage(contactData)
+                    .then(response => {
+                        showLoading(false);
+                        showNotification(
+                            `Message sent successfully! Reference ID: ${response.data.messageId}`,
+                            'success'
+                        );
+                        closeModal('contactModal');
+                        this.reset();
+                    })
+                    .catch(error => {
+                        showLoading(false);
+                        showNotification(
+                            error.message || 'Failed to send message. Please try again.',
+                            'error'
+                        );
+                    });
+            });
+        }
+
+        // Initialize contact form when page loads
+        document.addEventListener('DOMContentLoaded', initContactForm);
+
+        // Add contact button to contact section
+        function addContactButton() {
+            const contactSection = document.querySelector('#contact .contact-info');
+            if (contactSection) {
+                const contactButton = document.createElement('div');
+                contactButton.style.marginTop = '20px';
+                contactButton.innerHTML = '<button class="btn" onclick="openContactModal()">Send Message</button>';
+                contactSection.appendChild(contactButton);
+            }
+        }
+
+        // Function to open contact modal
+        function openContactModal() {
+            document.getElementById('contactModal').style.display = 'block';
+        }
+
+        // Add contact button when page loads
+        document.addEventListener('DOMContentLoaded', addContactButton);
+
+        // Load section information dynamically
+        function loadSectionInfo() {
+            SectionsAPI.getSections()
+                .then(response => {
+                    const sections = response.data;
+                    updateSectionCards(sections);
+                })
+                .catch(error => {
+                    console.error('Failed to load section information:', error);
+                });
+        }
+
+        function updateSectionCards(sections) {
+            const sectionCards = document.querySelectorAll('.section-card');
+            
+            sections.forEach(section => {
+                const card = Array.from(sectionCards).find(card => 
+                    card.querySelector('h3').textContent.includes(section.name)
+                );
+                
+                if (card) {
+                    const description = card.querySelector('p');
+                    if (section.description) {
+                        description.textContent = section.description;
+                    }
+                    
+                    // Add enrollment info
+                    const enrollmentInfo = document.createElement('div');
+                    enrollmentInfo.className = 'enrollment-info';
+                    enrollmentInfo.style.cssText = 'margin-top: 10px; font-size: 0.9em; color: #666;';
+                    enrollmentInfo.innerHTML = `
+                        <div>Capacity: ${section.capacity}</div>
+                        <div>Available: ${section.available_spots}</div>
+                        <div>Fee: ₦${section.fee_termly?.toLocaleString()} (Termly)</div>
+                    `;
+                    
+                    // Insert before the button
+                    const button = card.querySelector('.btn');
+                    button.parentNode.insertBefore(enrollmentInfo, button);
+                }
+            });
+        }
+
+        // Load section info when page loads
+        document.addEventListener('DOMContentLoaded', loadSectionInfo);
 
         // Simple scroll effect for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -838,6 +1012,9 @@
                 }
             });
         });
+
+        // Make openContactModal globally available
+        window.openContactModal = openContactModal;
     </script>
 </body>
 

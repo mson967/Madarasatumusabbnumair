@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Musab Bin Umair Memorial School</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/js/api.js"></script>
+    <style>
+        :root {
+            --color-primary: #1a5e3c;
+            --color-secondary: #d4af37;
+            --color-accent: #2c7d52;
+            --color-light: #f4f9f4;
+            --color-dark: #333;
+            --color-white: #fff;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--color-light);
+            color: var(--color-dark);
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            padding: 2rem 0;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--color-secondary);
+        }
+
+        .sidebar nav ul {
+            list-style: none;
+        }
+
+        .sidebar nav a {
+            display: block;
+            color: var(--color-white);
+            text-decoration: none;
+            padding: 1rem 2rem;
+            transition: var(--transition);
+        }
+
+        .sidebar nav a:hover, .sidebar nav a.active {
+            background: var(--color-accent);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--color-primary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--color-white);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stat-card i {
+            font-size: 3rem;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .content-section {
+            background: var(--color-white);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: var(--color-light);
+            font-weight: bold;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--color-primary);
+            color: var(--color-white);
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background: var(--color-accent);
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            font-size: 0.8rem;
+        }
+
+        .btn-success { background: #28a745; }
+        .btn-warning { background: #ffc107; color: var(--color-dark); }
+        .btn-danger { background: #dc3545; }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-approved { background: #d4edda; color: #155724; }
+        .status-rejected { background: #f8d7da; color: #721c24; }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+        }
+
+        .login-form {
+            background: var(--color-white);
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 1rem 0;
+            }
+            
+            .sidebar nav {
+                display: flex;
+                overflow-x: auto;
+            }
+            
+            .sidebar nav a {
+                white-space: nowrap;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Login form will be shown initially -->
+        <div id="loginContainer" class="login-container">
+            <form id="loginForm" class="login-form">
+                <h2 style="text-align: center; margin-bottom: 2rem; color: var(--color-primary);">Admin Login</h2>
+                <div class="form-group">
+                    <label for="username">Username or Email</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Login</button>
+            </form>
+        </div>
+
+        <!-- Admin dashboard (hidden initially) -->
+        <div id="dashboardContainer" class="admin-container" style="display: none;">
+            <aside class="sidebar">
+                <h2>Admin Panel</h2>
+                <nav>
+                    <ul>
+                        <li><a href="#" class="nav-link active" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="#" class="nav-link" data-section="registrations"><i class="fas fa-user-graduate"></i> Registrations</a></li>
+                        <li><a href="#" class="nav-link" data-section="messages"><i class="fas fa-envelope"></i> Messages</a></li>
+                        <li><a href="#" class="nav-link" data-section="sections"><i class="fas fa-school"></i> Sections</a></li>
+                        <li><a href="#" class="nav-link" data-section="profile"><i class="fas fa-user"></i> Profile</a></li>
+                        <li><a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <main class="main-content">
+                <div class="header">
+                    <h1 id="pageTitle">Dashboard</h1>
+                    <div>
+                        <span id="adminInfo">Welcome, Admin</span>
+                    </div>
+                </div>
+
+                <!-- Dashboard Section -->
+                <div id="dashboardSection" class="content-section">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fas fa-users"></i>
+                            <h3 id="totalStudents">0</h3>
+                            <p>Total Students</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-clock"></i>
+                            <h3 id="pendingRegistrations">0</h3>
+                            <p>Pending Registrations</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-check-circle"></i>
+                            <h3 id="approvedRegistrations">0</h3>
+                            <p>Approved Registrations</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-envelope"></i>
+                            <h3 id="unreadMessages">0</h3>
+                            <p>Unread Messages</p>
+                        </div>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Recent Registrations</h3>
+                        <div class="table-container">
+                            <table id="recentRegistrationsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Section</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Registrations Section -->
+                <div id="registrationsSection" class="content-section" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3>Student Registrations</h3>
+                        <div>
+                            <select id="statusFilter">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                            <button class="btn" onclick="exportData('students')">Export</button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table id="registrationsTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Student Name</th>
+                                    <th>Parent Name</th>
+                                    <th>Section</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Messages Section -->
+                <div id="messagesSection" class="content-section" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3>Contact Messages</h3>
+                        <button class="btn" onclick="exportData('messages')">Export</button>
+                    </div>
+                    <div class="table-container">
+                        <table id="messagesTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Subject</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sections Section -->
+                <div id="sectionsSection" class="content-section" style="display: none;">
+                    <h3>School Sections</h3>
+                    <div id="sectionsGrid" class="stats-grid"></div>
+                </div>
+
+                <!-- Profile Section -->
+                <div id="profileSection" class="content-section" style="display: none;">
+                    <h3>Admin Profile</h3>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label for="profileEmail">Email</label>
+                            <input type="email" id="profileEmail" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" name="currentPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" name="newPassword">
+                        </div>
+                        <button type="submit" class="btn">Update Profile</button>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Authentication state
+        let authToken = localStorage.getItem('adminToken');
+        let currentUser = null;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            if (authToken) {
+                showDashboard();
+                loadDashboardData();
+            } else {
+                showLogin();
+            }
+
+            initializeEventListeners();
+        });
+
+        function initializeEventListeners() {
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+
+            // Navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', handleNavigation);
+            });
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+
+            // Status filter
+            document.getElementById('statusFilter').addEventListener('change', loadRegistrations);
+
+            // Profile form
+            document.getElementById('profileForm').addEventListener('submit', handleProfileUpdate);
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const credentials = {
+                username: formData.get('username'),
+                password: formData.get('password')
+            };
+
+            try {
+                showLoading(true);
+                const response = await AdminAPI.login(credentials);
+                
+                authToken = response.data.token;
+                currentUser = response.data.admin;
+                
+                localStorage.setItem('adminToken', authToken);
+                
+                // Set authorization header for future requests
+                API.defaultHeaders = { Authorization: `Bearer ${authToken}` };
+                
+                showDashboard();
+                loadDashboardData();
+                showNotification('Login successful!', 'success');
+                
+            } catch (error) {
+                showNotification(error.message || 'Login failed', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('adminToken');
+            authToken = null;
+            currentUser = null;
+            showLogin();
+            showNotification('Logged out successfully', 'info');
+        }
+
+        function showLogin() {
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('dashboardContainer').style.display = 'none';
+        }
+
+        function showDashboard() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'flex';
+            
+            if (currentUser) {
+                document.getElementById('adminInfo').textContent = `Welcome, ${currentUser.username}`;
+            }
+        }
+
+        function handleNavigation(event) {
+            event.preventDefault();
+            
+            const section = event.target.dataset.section;
+            if (!section) return;
+
+            // Update active nav
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Show section
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(section + 'Section').style.display = 'block';
+
+            // Update page title
+            const titles = {
+                dashboard: 'Dashboard',
+                registrations: 'Student Registrations',
+                messages: 'Contact Messages',
+                sections: 'School Sections',
+                profile: 'Admin Profile'
+            };
+            document.getElementById('pageTitle').textContent = titles[section];
+
+            // Load section data
+            switch (section) {
+                case 'dashboard':
+                    loadDashboardData();
+                    break;
+                case 'registrations':
+                    loadRegistrations();
+                    break;
+                case 'messages':
+                    loadMessages();
+                    break;
+                case 'sections':
+                    loadSections();
+                    break;
+                case 'profile':
+                    loadProfile();
+                    break;
+            }
+        }
+
+        async function loadDashboardData() {
+            try {
+                const response = await fetch('/api/admin/dashboard', {
+                    headers: { Authorization: `Bearer ${authToken}` }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    const overview = data.data.overview;
+                    document.getElementById('totalStudents').textContent = overview.total_students;
+                    document.getElementById('pendingRegistrations').textContent = overview.pending_registrations;
+                    document.getElementById('approvedRegistrations').textContent = overview.approved_registrations;
+                    document.getElementById('unreadMessages').textContent = overview.unread_messages;
+
+                    // Load recent registrations
+                    const tbody = document.querySelector('#recentRegistrationsTable tbody');
+                    tbody.innerHTML = '';
+                    
+                    data.data.recent_registrations.forEach(reg => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${reg.student_name}</td>
+                            <td>${reg.section}</td>
+                            <td><span class="status-badge status-${reg.status}">${reg.status}</span></td>
+                            <td>${new Date(reg.created_at).toLocaleDateString()}</td>
+                        `;
+                    });
+                }
+            } catch (error) {
+                showNotification('Failed to load dashboard data', 'error');
+            }
+        }
+
+        async function loadRegistrations() {
+            try {
+                const status = document.getElementById('statusFilter').value;
+                const params = status ? { status } : {};
+                
+                const response = await fetch(`/api/registration?${new URLSearchParams(params)}`, {
+                    headers: { Authorization: `Bearer ${authToken}` }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    const tbody = document.querySelector('#registrationsTable tbody');
+                    tbody.innerHTML = '';
+                    
+                    data.data.forEach(reg => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>MBU${reg.id.toString().padStart(6, '0')}</td>
+                            <td>${reg.student_name}</td>
+                            <td>${reg.parent_name}</td>
+                            <td>${reg.section}</td>
+                            <td><span class="status-badge status-${reg.status}">${reg.status}</span></td>
+                            <td>${new Date(reg.created_at).toLocaleDateString()}</td>
+                            <td>
+                                ${reg.status === 'pending' ? `
+                                    <button class="btn btn-small btn-success" onclick="updateRegistrationStatus(${reg.id}, 'approved')">Approve</button>
+                                    <button class="btn btn-small btn-danger" onclick="updateRegistrationStatus(${reg.id}, 'rejected')">Reject</button>
+                                ` : ''}
+                            </td>
+                        `;
+                    });
+                }
+            } catch (error) {
+                showNotification('Failed to load registrations', 'error');
+            }
+        }
+
+        async function updateRegistrationStatus(id, status) {
+            try {
+                const response = await fetch(`/api/registration/${id}/status`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ status })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    showNotification(`Registration ${status} successfully`, 'success');
+                    loadRegistrations();
+                } else {
+                    showNotification(data.message, 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to update registration status', 'error');
+            }
+        }
+
+        async function loadMessages() {
+            try {
+                const response = await fetch('/api/contact', {
+                    headers: { Authorization: `Bearer ${authToken}` }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    const tbody = document.querySelector('#messagesTable tbody');
+                    tbody.innerHTML = '';
+                    
+                    data.data.forEach(msg => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${msg.name}</td>
+                            <td>${msg.email}</td>
+                            <td>${msg.subject}</td>
+                            <td><span class="status-badge status-${msg.status === 'unread' ? 'pending' : 'approved'}">${msg.status}</span></td>
+                            <td>${new Date(msg.created_at).toLocaleDateString()}</td>
+                            <td>
+                                <button class="btn btn-small" onclick="viewMessage(${msg.id})">View</button>
+                            </td>
+                        `;
+                    });
+                }
+            } catch (error) {
+                showNotification('Failed to load messages', 'error');
+            }
+        }
+
+        async function loadSections() {
+            try {
+                const response = await fetch('/api/sections');
+                const data = await response.json();
+
+                if (data.success) {
+                    const grid = document.getElementById('sectionsGrid');
+                    grid.innerHTML = '';
+                    
+                    data.data.forEach(section => {
+                        const card = document.createElement('div');
+                        card.className = 'stat-card';
+                        card.innerHTML = `
+                            <h3>${section.name}</h3>
+                            <p>Capacity: ${section.capacity}</p>
+                            <p>Enrolled: ${section.enrolled_students}</p>
+                            <p>Available: ${section.available_spots}</p>
+                            <p>Fee: ₦${section.fee_termly?.toLocaleString()}</p>
+                        `;
+                        grid.appendChild(card);
+                    });
+                }
+            } catch (error) {
+                showNotification('Failed to load sections', 'error');
+            }
+        }
+
+        async function loadProfile() {
+            try {
+                const response = await fetch('/api/admin/profile', {
+                    headers: { Authorization: `Bearer ${authToken}` }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('profileEmail').value = data.data.email;
+                }
+            } catch (error) {
+                showNotification('Failed to load profile', 'error');
+            }
+        }
+
+        async function handleProfileUpdate(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const profileData = {
+                email: formData.get('email'),
+                currentPassword: formData.get('currentPassword'),
+                newPassword: formData.get('newPassword')
+            };
+
+            // Remove empty fields
+            Object.keys(profileData).forEach(key => {
+                if (!profileData[key]) delete profileData[key];
+            });
+
+            try {
+                const response = await fetch('/api/admin/profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(profileData)
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    showNotification('Profile updated successfully', 'success');
+                    event.target.reset();
+                } else {
+                    showNotification(data.message, 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to update profile', 'error');
+            }
+        }
+
+        async function exportData(type) {
+            try {
+                const response = await fetch(`/api/admin/export/${type}?format=csv`, {
+                    headers: { Authorization: `Bearer ${authToken}` }
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${type}_${new Date().toISOString().split('T')[0]}.csv`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                    
+                    showNotification('Data exported successfully', 'success');
+                } else {
+                    showNotification('Failed to export data', 'error');
+                }
+            } catch (error) {
+                showNotification('Failed to export data', 'error');
+            }
+        }
+
+        function viewMessage(id) {
+            // This would open a modal with the full message
+            showNotification('Message viewing functionality would be implemented here', 'info');
+        }
+
+        // Make functions globally available
+        window.updateRegistrationStatus = updateRegistrationStatus;
+        window.exportData = exportData;
+        window.viewMessage = viewMessage;
+    </script>
+</body>
+</html>
